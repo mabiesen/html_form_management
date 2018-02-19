@@ -24,7 +24,13 @@ class url_form_manager:
 
         # create forms with inputs
         for x in html_forms:
-            thisform = form(x, self.url, x['name'])
+
+            try:
+                form_name = x['name']
+            except:
+                form_name = ""
+
+            thisform = form(x, self.url, form_name)
 
             # create inputs
             these_inputs = x.findAll('input')
@@ -52,14 +58,27 @@ class url_form_manager:
         except:
             input_value = ""
 
-        if input_type == 'text':
-            return form_input_text(inputsoup, inputsoup['name'], input_value)
-        if input_type == 'hidden':
-            return form_input_hidden(inputsoup, inputsoup['name'], input_value)
-        if input_type == 'submit':
-            return form_input_submit(inputsoup, inputsoup['name'])
-        if input_type == 'radio':
-            return form_input_radio(inputsoup, inputsoup['name'])
+        try:
+            input_name = inputsoup['name']
+        except:
+            input_name = ""
+
+        # set some variables needed for db, but not yet supplied
+        dbid = ""
+        nickname = ""
+        uservalue = input_value
+        active = True
+
+        # create generic input: right now applies to all inputs
+        return form_input_general(\
+        dbid,\
+        inputsoup,\
+        input_name,\
+        nickname,\
+        input_type,\
+        input_value,\
+        uservalue,\
+        active)
 
     def generate_select():
         pass
